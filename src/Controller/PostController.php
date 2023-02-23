@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\PostType;
 use App\Entity\Post;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -19,11 +20,14 @@ class PostController extends AbstractController
     }
 
     #[Route('/post/new')]
-    public function create(): Response
+    public function create(Request $request): Response
     {
         $post = new Post();
         $form = $this->createForm(PostType::class, $post);
-
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            dump($post);
+        }
         return $this->render('post/form.html.twig', [
             'post_form' => $form->createView(),
         ]);
