@@ -2,16 +2,30 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Entity()]
+#[ORM\Table(name: 'post')]
 
 class Post
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
     private int $id;
+
+    #[ORM\Column(type: 'string', length: 150, nullable: true)]
     private ?string $title = NULL;
+
+    #[ORM\Column(type: 'text', length: 350)]
     private string $content;
+
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $image = NULL;
-    private $user;
-    
+
+    /*
+    private $user;*/
+
     public function getId()
     {
         return $this->id;

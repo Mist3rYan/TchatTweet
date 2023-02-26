@@ -25,10 +25,11 @@ class PostType extends AbstractType
                         "max" => 150,
                         "minMessage" => "Le titre ne doit pas dépasser 150 caractères",
                         "maxMessage" => "Le titre ne doit pas dépasser 150 caractères"
-                    ])]
-                ])
+                    ])
+                ]
+            ])
             ->add("content", TextareaType::class, [
-                "label" => "Contenu", 
+                "label" => "Contenu",
                 "required" => true,
                 "constraints" => [
                     new Assert\NotBlank(["message" => "Le contenue est obligatoire"]),
@@ -37,8 +38,9 @@ class PostType extends AbstractType
                         "max" => 350,
                         "minMessage" => "Le contenue doit faire entre 5 et 350 caractères",
                         "maxMessage" => "Le contenue doit faire entre 5 et 350 caractères"
-                    ])]
                     ])
+                ]
+            ])
             ->add("image", UrlType::class, [
                 "label" => "URL de l'image",
                 "required" => false,
