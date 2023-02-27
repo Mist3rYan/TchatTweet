@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
- 
+
 use App\Form\PostType;
 use App\Entity\Post;
 use Doctrine\Persistence\ManagerRegistry;
@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PostController extends AbstractController
 {
-    #[Route('/')]
+    #[Route('/', name: 'home')]
     public function index(ManagerRegistry $doctrine): Response
     {
         $repositery = $doctrine->getRepository(Post::class);
@@ -34,9 +34,45 @@ class PostController extends AbstractController
             $em = $doctrine->getManager();
             $em->persist($post);
             $em->flush();
+            return $this->redirectToRoute('home');
         }
         return $this->render('post/form.html.twig', [
             'post_form' => $form->createView(),
         ]);
+    }
+
+    #[Route('/post/edit/{id<\d+>}', name: 'edit-post')] // id<\d+> : id doit être un nombre
+    public function update(Post $post, ManagerRegistry $doctrine, Request $request): Response
+    {
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $doctrine->getManager();
+            $em->flush();
+            return $this->redirectToRoute('home');
+        }
+        return $this->render('post/form.html.twig', [
+            'post_form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/post/delete/{id<\d+>}', name: 'delete-post')] // id<\d+> : id doit être un nombre
+    public function delete(Post $post, ManagerRegistry $doctrine): Response
+    {
+        $em = $doctrine->getManager();
+        $em->remove($post);
+        $em->flush();
+        //redirection vers la page d'accueil
+        return $this->redirectToRoute('home');
+    }
+
+    #[Route('/post/copy/{id<\d+>}', name: 'copy-post')] // id<\d+> : id doit être un nombre
+    public function duplicate(Post $post, ManagerRegistry $doctrine): Response
+    {
+        $copyPost = clone $post;
+        $em = $doctrine->getManager();
+        $em->persist($copyPost);
+        $em->flush();
+        return $this->redirectToRoute('home');
     }
 }
