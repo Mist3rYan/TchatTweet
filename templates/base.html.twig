@@ -49,8 +49,9 @@
 							</button>
 						</form>
 						{% if app.user %}
-							Bienvenue
-							{{ app.user.username }}
+							<span class="mx-2 p-2 bg-primary text-white rounded" >Bienvenue {{ app.user.username }}</span>
+							
+							
 							<a href="/logout" class="btn btn-primary">Déconnexion</a>
 						{% else %}
 							<a href="/login" class="btn btn-outline-primary">Connexion</a>

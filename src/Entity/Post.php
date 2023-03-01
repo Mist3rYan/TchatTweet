@@ -23,6 +23,9 @@ class Post
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $image = NULL;
 
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private \DateTime $publishedAt;
+
     #[ORM\ManyToOne(targetEntity: "App\Entity\User", inversedBy: 'posts')]
     #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id", onDelete: "CASCADE")]
     private $user;
@@ -83,6 +86,26 @@ class Post
     public function setUser($user)
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of publishedAt
+     */ 
+    public function getPublishedAt()
+    {
+        return $this->publishedAt;
+    }
+
+    /**
+     * Set the value of publishedAt
+     *
+     * @return  self
+     */ 
+    public function setPublishedAt($publishedAt)
+    {
+        $this->publishedAt = $publishedAt;
 
         return $this;
     }
