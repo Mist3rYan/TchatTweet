@@ -33,16 +33,21 @@
 							<li class="nav-item">
 								<a class="nav-link active" aria-current="page" href="/">Accueil</a>
 							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="/post/new">Publier</a>
-							</li>
+							{% if app.user %}
+								<li class="nav-item">
+									<a class="nav-link" href="/post/new">Publier</a>
+								</li>
+							{% endif %}
 						</ul>
 						<form class="d-flex" role="search">
 							<input class="form-control me-2" type="search" placeholder="Rechercher" aria-label="Search">
-							<button class="btn btn-outline-primary" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+							<button class="btn btn-outline-primary" type="submit">
+								<i class="fa-solid fa-magnifying-glass"></i>
+							</button>
 						</form>
 						{% if app.user %}
-							Bienvenue {{ app.user.username }}
+							Bienvenue
+							{{ app.user.username }}
 							<a href="/logout" class="btn btn-primary">Déconnexion</a>
 						{% else %}
 							<a href="/login" class="btn btn-outline-primary">Connexion</a>
@@ -51,7 +56,7 @@
 				</div>
 			</nav>
 		{% endblock %}
-		<div class="container">
-			{% block body %}{% endblock %}
-	</body>
-</html>
+		<div class="container"> {% block body %}{% endblock %}
+			</body>
+		</body>
+	</html>

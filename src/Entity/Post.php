@@ -24,6 +24,7 @@ class Post
     private ?string $image = NULL;
 
     #[ORM\ManyToOne(targetEntity: "App\Entity\User", inversedBy: 'posts')]
+    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id", onDelete: "CASCADE")]
     private $user;
 
     public function getId()

@@ -12,46 +12,47 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PostController extends AbstractController
 {
-    #[Route('/', name: 'home')]
-    public function index(ManagerRegistry $doctrine): Response
+    #[Route('/', name: 'home')]// on definit la route
+    public function index(ManagerRegistry $doctrine): Response// on recupere le manager de doctrine
     {
-        $repositery = $doctrine->getRepository(Post::class);
-        $posts = $repositery->findAll();
-        return $this->render('post/index.html.twig', [
-            "posts" => $posts
+        $repositery = $doctrine->getRepository(Post::class);// on recupere le repositery de Post
+        $posts = $repositery->findAll();// on recupere tous les posts
+        return $this->render('post/index.html.twig', [// on affiche la vue
+            "posts" => $posts// on envoie les posts à la vue
         ]);
     }
 
     #[Route('/post/new')]
     public function create(Request $request, ManagerRegistry $doctrine): Response
     {
-        $post = new Post();
+        $post = new Post();// on instancie un objet Post
         $form = $this->createForm(PostType::class, $post);
         // $form recuperer les données du formulaire et les injecter dans $post
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $doctrine->getManager();
-            $em->persist($post);
-            $em->flush();
-            return $this->redirectToRoute('home');
+        if ($form->isSubmitted() && $form->isValid()) {// si le formulaire est soumis et valide
+            $post->setUser($this->getUser());// on recupere l'utilisateur connecté
+            $em = $doctrine->getManager();// on recupere le manager de doctrine
+            $em->persist($post);// on enregistre l'objet $post
+            $em->flush();// on enregistre en base de données
+            return $this->redirectToRoute('home');// on redirige vers la page d'accueil
         }
-        return $this->render('post/form.html.twig', [
-            'post_form' => $form->createView(),
+        return $this->render('post/form.html.twig', [// on affiche le formulaire
+            'post_form' => $form->createView(),// on envoie le formulaire à la vue
         ]);
     }
 
     #[Route('/post/edit/{id<\d+>}', name: 'edit-post')] // id<\d+> : id doit être un nombre
     public function update(Post $post, ManagerRegistry $doctrine, Request $request): Response
     {
-        $form = $this->createForm(PostType::class, $post);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $doctrine->getManager();
-            $em->flush();
-            return $this->redirectToRoute('home');
+        $form = $this->createForm(PostType::class, $post);// on recupere le formulaire
+        $form->handleRequest($request);// on recupere les données du formulaire
+        if ($form->isSubmitted() && $form->isValid()) {// si le formulaire est soumis et valide
+            $em = $doctrine->getManager();// on recupere le manager de doctrine
+            $em->flush();// on enregistre en base de données
+            return $this->redirectToRoute('home');// on redirige vers la page d'accueil
         }
-        return $this->render('post/form.html.twig', [
-            'post_form' => $form->createView(),
+        return $this->render('post/form.html.twig', [// on affiche le formulaire
+            'post_form' => $form->createView(),// on envoie le formulaire à la vue
         ]);
     }
 
@@ -59,7 +60,7 @@ class PostController extends AbstractController
     public function delete(Post $post, ManagerRegistry $doctrine): Response
     {
         $em = $doctrine->getManager();
-        $em->remove($post);
+        $em->remove($post);// on supprime l'objet $post
         $em->flush();
         //redirection vers la page d'accueil
         return $this->redirectToRoute('home');
