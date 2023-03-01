@@ -3,12 +3,10 @@
 {% block body %}
 	{% if error %}
 		<div class="alert alert-danger">
-			{{ error.messageKey}}
+			{{ error.messageKey|trans(error.messageData, 'security')}}
 		</div>
 	{% endif %}
-	{# {{ form_start(form) }}
-		    {{ form_rest(form) }}
-		    <input type="submit" value="Connexion" class="btn btn-success mt-2"> #}
+	
 	<form class="container" method="post">
 		<label for="username">Nom d'utilisateur</label>
 		<input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" required="required"/>

@@ -5,12 +5,11 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\Callback;
-use Symfony\Component\Validator\Context\ExecutionContext;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 class UserType extends AbstractType
 {
@@ -31,27 +30,13 @@ class UserType extends AbstractType
                     ])
                 ]
             ])
-            ->add("password", PasswordType::class, [
-                "label" => "Mot de passe",
-                "required" => true,
-                "constraints" => [
-                    new Assert\NotBlank(["message" => "Le mot de passe ne doit pas être vide !"])
-                ]
-            ])
-            ->add("confirm", PasswordType::class, [
-                "label" => "Confirmer le mot de passe",
-                "required" => true,
-                "constraints" => [
-                    // new EqualTo(["propertyPath" => "password", "message" => "Les mots de passe ne correspondent pas !"]),
-                    new Assert\NotBlank(["message" => "Le mot de passe ne doit pas être vide !"]),
-                    //A revoir
-                    new Callback(['callback' => function ($value, ExecutionContext $context) {
-                        if ($context->getRoot()['password']->getViewData() !== $value) {
-                            $context->buildViolation('Les mots de passe ne correspondent pas !');
-                        }
-                        }])
-                ]
-            ]);
+            ->add('password', RepeatedType::class, [// on ajoute un champ de type RepeatedType qui permet de saisir deux fois le même mot de passe
+                'type' => PasswordType::class,
+                'invalid_message' => 'Les mots de passe doivent correspondre.',
+                'options' => ['attr' => ['class' => 'password-field']],
+                'required' => true,
+                'first_options'  => ['label' => 'Mot de passe'],
+                'second_options' => ['label' => 'Confirmer le mot de passe']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)// on configure les options du formulaire
