@@ -7,9 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Entity(repositoryClass: UserRepository::class)]// on ajoute cette ligne pour dire à doctrine que cette classe est une entité
+#[UniqueEntity("username", message:"Ce nom d'utilisateur existe déjà !")]// on ajoute cette ligne pour vérifier que l'username est unique
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     private $passwordHasher;
