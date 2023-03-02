@@ -4,20 +4,23 @@ namespace App\Controller;
 
 use App\Form\PostType;
 use App\Entity\Post;
+use App\Repository\PostRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Twig\Node\Expression\Binary\AddBinary;
 
 class PostController extends AbstractController
 {
     #[Route('/', name: 'home')] // on definit la route
-    public function index(ManagerRegistry $doctrine): Response // on recupere le manager de doctrine
+    public function index(PostRepository $repository, Request $request): Response // on recupere le manager de doctrine
     {
-        $repositery = $doctrine->getRepository(Post::class); // on recupere le repositery de Post
-        $posts = $repositery->findAll(); // on recupere tous les posts
+        $search = $request->request->get('search'); // on recupere la valeur de la recherche
+        $posts = $repository->findAll(); // on recupere tous les posts
+        if($search) { // si la recherche n'est pas vide
+            $posts = $repository->findBySearch($search); // on recupere les posts qui correspondent à la recherche
+        }
         return $this->render('post/index.html.twig', [ // on affiche la vue
             "posts" => $posts // on envoie les posts à la vue
         ]);
