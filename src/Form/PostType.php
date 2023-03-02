@@ -5,11 +5,12 @@ namespace App\Form;
 use App\Entity\Post;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\File;
 
 class PostType extends AbstractType
 {
@@ -41,11 +42,29 @@ class PostType extends AbstractType
                     ])
                 ]
             ])
-            ->add("image", UrlType::class, [
-                "label" => "URL de l'image",
+            // ->add("image", UrlType::class, [
+            //     "label" => "URL de l'image",
+            //     "required" => false,
+            //     "constraints" => [
+            //         new Assert\Url(["message" => "L'URL doit être celle d'une image valide"])
+            //     ]
+            // ])
+            ->add("image", FileType::class, [
+                "label" => "Image",
+                "mapped" => false,
                 "required" => false,
                 "constraints" => [
-                    new Assert\Url(["message" => "L'URL doit être celle d'une image valide"])
+                    new File([
+                        'maxSize' => '2048k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/svg+xml',
+                            'image/webp',
+                            'image/jpg'
+                        ],
+                        'mimeTypesMessage' => 'Veuillez uploader une image valide',])
                 ]
             ]);
     }
